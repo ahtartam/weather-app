@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string name="city_list_fragment_label">City List</string>
+    <string name="city_details_fragment_label">City Details</string>
+</resources>
