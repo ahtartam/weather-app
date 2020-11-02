@@ -6,16 +6,23 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
+import ru.ahtartam.weatherapp.di.App
 import ru.ahtartam.weatherapp.di.ApplicationComponent
 import ru.ahtartam.weatherapp.di.DaggerApplicationComponent
 import timber.log.Timber
 
-class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
+class WeatherApp : Application(), App, Application.ActivityLifecycleCallbacks {
     val appComponent: ApplicationComponent = DaggerApplicationComponent.create()
+
+    companion object {
+        var instance: App? = null
+            private set
+    }
 
     override fun onCreate() {
         super.onCreate()
 
+        instance = this
         registerActivityLifecycleCallbacks(this)
         Timber.plant(Timber.DebugTree())
     }
