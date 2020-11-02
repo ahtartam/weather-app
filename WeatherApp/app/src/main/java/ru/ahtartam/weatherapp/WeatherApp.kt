@@ -11,6 +11,7 @@ import kotlinx.coroutines.SupervisorJob
 import ru.ahtartam.weatherapp.di.App
 import ru.ahtartam.weatherapp.di.ApplicationComponent
 import ru.ahtartam.weatherapp.di.DaggerApplicationComponent
+import ru.ahtartam.weatherapp.mvp.CityDetailsContract
 import ru.ahtartam.weatherapp.mvp.CityListContract
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,7 +20,9 @@ class WeatherApp : Application(), App, Application.ActivityLifecycleCallbacks {
     val appComponent: ApplicationComponent = DaggerApplicationComponent.create()
 
     @Inject
-    lateinit var presenter: CityListContract.Presenter
+    lateinit var listPresenter: CityListContract.Presenter
+    @Inject
+    lateinit var detailsPresenter: CityDetailsContract.Presenter
 
     private val appJob = SupervisorJob()
     private val appScope = CoroutineScope(appJob)
@@ -43,7 +46,8 @@ class WeatherApp : Application(), App, Application.ActivityLifecycleCallbacks {
             super.onAvailable(network)
             Timber.d("NetworkCallback.onAvailable($network)")
 
-            presenter.refresh(appScope)
+            listPresenter.refresh(appScope)
+            detailsPresenter.refresh(appScope)
         }
     }
 

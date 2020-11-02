@@ -69,6 +69,11 @@ class CityDetailsFragment : Fragment(), CityDetailsContract.View {
         findNavController().navigate(R.id.action_CityDetailsFragment_to_CityListFragment)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detachView()
+    }
+
     companion object {
         const val ARG_CITY_ID = "cityId"
     }

@@ -18,6 +18,7 @@ import javax.inject.Singleton
 interface MainModule {
 
     @Binds
+    @Singleton
     fun bindDatabaseProvider(impl: DatabaseProviderImpl): DatabaseProvider
 
     @Binds
