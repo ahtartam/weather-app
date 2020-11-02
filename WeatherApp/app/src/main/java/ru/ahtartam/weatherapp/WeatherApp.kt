@@ -6,9 +6,12 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
+import ru.ahtartam.weatherapp.di.ApplicationComponent
+import ru.ahtartam.weatherapp.di.DaggerApplicationComponent
 import timber.log.Timber
 
 class WeatherApp : Application(), Application.ActivityLifecycleCallbacks {
+    val appComponent: ApplicationComponent = DaggerApplicationComponent.create()
 
     override fun onCreate() {
         super.onCreate()

@@ -8,8 +8,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import ru.ahtartam.weatherapp.R
+import ru.ahtartam.weatherapp.WeatherApp
 
 class CityListFragment : Fragment() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireContext().applicationContext as WeatherApp).appComponent.inject(this)
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
