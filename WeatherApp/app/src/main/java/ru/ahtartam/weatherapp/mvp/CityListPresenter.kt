@@ -1,13 +1,11 @@
 package ru.ahtartam.weatherapp.mvp
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import ru.ahtartam.weatherapp.api.WeatherAdiService
 import ru.ahtartam.weatherapp.db.Database
 import ru.ahtartam.weatherapp.db.DatabaseProvider
 import ru.ahtartam.weatherapp.mvp.base.PresenterBase
+import timber.log.Timber
 import javax.inject.Inject
 
 class CityListPresenter @Inject constructor(
@@ -30,7 +28,10 @@ class CityListPresenter @Inject constructor(
     }
 
     override fun refresh(scope: CoroutineScope?) {
-        scope?.launch(Dispatchers.IO) {
+        scope?.launch(Dispatchers.IO + CoroutineExceptionHandler { context, throwable ->
+            Timber.e(throwable)
+            getView()?.showMessage(throwable.message ?: throwable::class.java.name)
+        }) {
             val weather = db.weatherDao().getCityWithWeatherList().map {
                 weatherAdiService.weatherByCityId(it.city.id).mapToWeather()
             }

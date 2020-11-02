@@ -12,6 +12,10 @@ interface WeatherDao {
     fun subscribeToCityWithWeatherList(): LiveData<List<CityWithWeather>>
 
     @Transaction
+    @Query("SELECT * FROM weather WHERE cityId = :cityId LIMIT 1")
+    fun subscribeToCityWithWeatherList(cityId: Int): LiveData<CityWithWeather>
+
+    @Transaction
     @Query("SELECT * FROM weather")
     suspend fun getCityWithWeatherList(): List<CityWithWeather>
 

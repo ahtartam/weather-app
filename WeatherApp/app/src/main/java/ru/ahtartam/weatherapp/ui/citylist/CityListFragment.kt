@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -64,15 +65,20 @@ class CityListFragment : Fragment(), CityListContract.View {
     }
 
     override fun showCityDetails(cityId: Int) {
-        findNavController().navigate(R.id.action_CityListFragment_to_CityDetailsFragment) // TODO
+        findNavController().navigate(
+            R.id.action_CityListFragment_to_CityDetailsFragment,
+            bundleOf(Pair("cityId", cityId))
+        )
     }
 
     override fun getScope(): CoroutineScope {
         return lifecycleScope
     }
 
-    override fun showMessage(messageResId: Int) {
-        Toast.makeText(context, messageResId, Toast.LENGTH_SHORT).show()
+    override fun showMessage(message: String) {
+        view?.post {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun back() {
