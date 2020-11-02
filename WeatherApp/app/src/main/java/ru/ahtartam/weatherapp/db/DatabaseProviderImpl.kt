@@ -21,10 +21,10 @@ class DatabaseProviderImpl @Inject constructor(
         return Room.databaseBuilder(
             context,
             Database::class.java,
-            "weather_db"
+            "weather.db"
         )
+            .createFromAsset("weather.db")
             .fallbackToDestructiveMigration()
             .build()
-
     }
 }
