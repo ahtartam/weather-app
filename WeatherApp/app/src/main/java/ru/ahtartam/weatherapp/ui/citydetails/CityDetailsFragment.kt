@@ -35,16 +35,11 @@ class CityDetailsFragment : Fragment(), CityDetailsContract.View {
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        presenter.setCityId(requireArguments().getInt("cityId"))
+        presenter.setCityId(requireArguments().getInt(ARG_CITY_ID))
 
         return inflater.inflate(R.layout.fragment_city_details, container, false).also {
             presenter.viewIsReady()
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
     }
 
     override fun showCityDetails(info: LiveData<CityWithWeather>) {
@@ -55,16 +50,14 @@ class CityDetailsFragment : Fragment(), CityDetailsContract.View {
     }
 
     override fun showDailyForecast(forecast: LiveData<CityWithDailyForecast>) {
-        forecast.observe(viewLifecycleOwner, Observer {
-            daily_forecast.text = it.forecastList?.joinToString("\n") {
+        forecast.observe(viewLifecycleOwner, Observer { value ->
+            daily_forecast.text = value.forecastList?.joinToString("\n") {
                 "${SimpleDateFormat.getDateInstance().format(it.date)}  --  ${it.temperature}"
             }
         })
     }
 
-    override fun getScope(): CoroutineScope {
-        return lifecycleScope
-    }
+    override fun getScope(): CoroutineScope = lifecycleScope
 
     override fun showMessage(message: String) {
         view?.post {
@@ -74,5 +67,9 @@ class CityDetailsFragment : Fragment(), CityDetailsContract.View {
 
     override fun back() {
         findNavController().navigate(R.id.action_CityDetailsFragment_to_CityListFragment)
+    }
+
+    companion object {
+        const val ARG_CITY_ID = "cityId"
     }
 }

@@ -11,10 +11,7 @@ import ru.ahtartam.weatherapp.WeatherApp
 import ru.ahtartam.weatherapp.api.WeatherAdiService
 import ru.ahtartam.weatherapp.db.DatabaseProvider
 import ru.ahtartam.weatherapp.db.DatabaseProviderImpl
-import ru.ahtartam.weatherapp.mvp.CityDetailsContract
-import ru.ahtartam.weatherapp.mvp.CityDetailsPresenter
-import ru.ahtartam.weatherapp.mvp.CityListContract
-import ru.ahtartam.weatherapp.mvp.CityListPresenter
+import ru.ahtartam.weatherapp.mvp.*
 import javax.inject.Singleton
 
 @Module(includes = [MainModule.ProvidesModule::class])
@@ -30,6 +27,10 @@ interface MainModule {
     @Binds
     @Singleton
     fun bindCityDetailsPresenter(impl: CityDetailsPresenter): CityDetailsContract.Presenter
+
+    @Binds
+    @Singleton
+    fun bindAddCityPresenter(impl: AddCityPresenter): AddCityContract.Presenter
 
     @Module
     class ProvidesModule {

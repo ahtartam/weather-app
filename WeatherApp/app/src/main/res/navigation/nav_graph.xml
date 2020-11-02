@@ -18,6 +18,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_CityListFragment_to_AddCityFragment"
+            app:destination="@id/AddCityFragment"
+            app:enterAnim="@anim/slide_in_down"
+            app:exitAnim="@anim/slide_out_up"
+            app:popEnterAnim="@anim/slide_in_up"
+            app:popExitAnim="@anim/slide_out_down" />
     </fragment>
     <fragment
         android:id="@+id/CityDetailsFragment"
@@ -27,6 +34,16 @@
 
         <action
             android:id="@+id/action_CityDetailsFragment_to_CityListFragment"
+            app:destination="@id/CityListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/AddCityFragment"
+        android:name="ru.ahtartam.weatherapp.ui.addcity.AddCityFragment"
+        android:label="@string/add_city_fragment_label"
+        tools:layout="@layout/fragment_add_city">
+
+        <action
+            android:id="@+id/action_AddCityFragment_to_CityListFragment"
             app:destination="@id/CityListFragment" />
     </fragment>
 </navigation>

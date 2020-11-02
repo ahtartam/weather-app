@@ -13,11 +13,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
 import ru.ahtartam.weatherapp.model.CityWithWeather
 import ru.ahtartam.weatherapp.mvp.CityListContract
+import ru.ahtartam.weatherapp.ui.citydetails.CityDetailsFragment
 import javax.inject.Inject
 
 class CityListFragment : Fragment(), CityListContract.View {
@@ -47,12 +49,26 @@ class CityListFragment : Fragment(), CityListContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
+            findNavController().navigate(
+                R.id.action_CityListFragment_to_AddCityFragment
+            )
+        }
+
         adapter = CityListAdapter {
             presenter.onCityClicked(it)
         }
         view.findViewById<RecyclerView>(R.id.recycler).adapter = adapter
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh)
         swipeRefreshLayout.setOnRefreshListener {
+            presenter.refresh()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (arguments?.getBoolean(ARG_IS_NEED_REFRESH, false) == true) {
             presenter.refresh()
         }
     }
@@ -67,13 +83,11 @@ class CityListFragment : Fragment(), CityListContract.View {
     override fun showCityDetails(cityId: Int) {
         findNavController().navigate(
             R.id.action_CityListFragment_to_CityDetailsFragment,
-            bundleOf(Pair("cityId", cityId))
+            bundleOf(Pair(CityDetailsFragment.ARG_CITY_ID, cityId))
         )
     }
 
-    override fun getScope(): CoroutineScope {
-        return lifecycleScope
-    }
+    override fun getScope(): CoroutineScope = lifecycleScope
 
     override fun showMessage(message: String) {
         view?.post {
@@ -81,12 +95,14 @@ class CityListFragment : Fragment(), CityListContract.View {
         }
     }
 
-    override fun back() {
-
-    }
+    override fun back() {}
 
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
+    }
+
+    companion object {
+        const val ARG_IS_NEED_REFRESH = "needRefresh"
     }
 }
