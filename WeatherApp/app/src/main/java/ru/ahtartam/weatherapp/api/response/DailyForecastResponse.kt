@@ -7,16 +7,18 @@ import java.util.*
 
 @JsonClass(generateAdapter = true)
 data class DailyForecastResponse(
-    @field:Json(name = "city")
-    val city: CityGroup,
-    @field:Json(name = "list")
-    val list: List<ForecastGroup>
+    @field:Json(name = "current")
+    val current: CurrentGroup,
+    @field:Json(name = "daily")
+    val daily: List<DailyGroup>
 ) {
-    data class CityGroup(
-        val id: Int,
-        val name: String
+    data class CurrentGroup (
+        @field:Json(name = "dt")
+        val date: Long,
+        @field:Json(name = "temp")
+        val temperature: Float
     )
-    data class ForecastGroup (
+    data class DailyGroup (
         @field:Json(name = "dt")
         val date: Long,
         @field:Json(name = "temp")
@@ -27,15 +29,15 @@ data class DailyForecastResponse(
         val day: Float
     )
 
-    fun mapToListDailyForecast(): List<DailyForecast> {
-        return list
+    fun mapToListDailyForecast(cityId: Int): List<DailyForecast> {
+        return daily
             .map {
                 it.date to it.temperature.day
             }
             .map {
                 DailyForecast(
-                    cityId = city.id,
-                    date = Date(it.first),
+                    cityId = cityId,
+                    date = Date(it.first * 1000),
                     temperature = it.second
                 )
             }

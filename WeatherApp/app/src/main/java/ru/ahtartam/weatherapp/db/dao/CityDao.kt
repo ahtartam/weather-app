@@ -9,4 +9,7 @@ import ru.ahtartam.weatherapp.model.City
 interface CityDao {
     @Query("SELECT * FROM citylist")
     fun getCityList(): LiveData<List<City>>
+
+    @Query("SELECT * FROM citylist WHERE id = :cityId LIMIT 1")
+    suspend fun getCityById(cityId: Int): City
 }

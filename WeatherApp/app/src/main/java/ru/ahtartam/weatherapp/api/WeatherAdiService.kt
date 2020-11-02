@@ -17,11 +17,12 @@ interface WeatherAdiService {
         @Query("lang") lang: String = "ru"
     ): WeatherResponse
 
-    @GET("forecast/daily")
+    @GET("onecall")
     suspend fun dailyForecastByCityId(
-        @Query("id") cityId: Int,
-        @Query("cnt") dayCount: Int = 7,
-        @Query("appid") apiKey: String = dailyForecastApiKey,
+        @Query("lat") lat: Float,
+        @Query("lon") lon: Float,
+        @Query("exclude") exclude: String = "minutely,hourly,alerts",
+        @Query("appid") apiKey: String = weatherApiKey,
         @Query("units") units: String = "metric",
         @Query("lang") lang: String = "ru"
     ): DailyForecastResponse

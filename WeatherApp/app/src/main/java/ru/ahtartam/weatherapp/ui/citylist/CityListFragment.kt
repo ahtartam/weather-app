@@ -77,7 +77,7 @@ class CityListFragment : Fragment(), CityListContract.View {
 
     override fun showMessage(message: String) {
         view?.post {
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
     }
 

@@ -17,6 +17,7 @@ import ru.ahtartam.weatherapp.WeatherApp
 import ru.ahtartam.weatherapp.model.CityWithDailyForecast
 import ru.ahtartam.weatherapp.model.CityWithWeather
 import ru.ahtartam.weatherapp.mvp.CityDetailsContract
+import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 class CityDetailsFragment : Fragment(), CityDetailsContract.View {
@@ -56,7 +57,7 @@ class CityDetailsFragment : Fragment(), CityDetailsContract.View {
     override fun showDailyForecast(forecast: LiveData<CityWithDailyForecast>) {
         forecast.observe(viewLifecycleOwner, Observer {
             daily_forecast.text = it.forecastList?.joinToString("\n") {
-                "${it.date} ${it.temperature}"
+                "${SimpleDateFormat.getDateInstance().format(it.date)}  --  ${it.temperature}"
             }
         })
     }
@@ -67,7 +68,7 @@ class CityDetailsFragment : Fragment(), CityDetailsContract.View {
 
     override fun showMessage(message: String) {
         view?.post {
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
     }
 
