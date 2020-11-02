@@ -6,42 +6,71 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.CoroutineScope
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
-import ru.ahtartam.weatherapp.api.WeatherAdiService
-import timber.log.Timber
+import ru.ahtartam.weatherapp.model.CityWithWeather
+import ru.ahtartam.weatherapp.mvp.CityListContract
 import javax.inject.Inject
 
-class CityListFragment : Fragment() {
+class CityListFragment : Fragment(), CityListContract.View {
 
     @Inject
-    lateinit var weatherAdiService: WeatherAdiService
+    lateinit var presenter: CityListContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireContext().applicationContext as WeatherApp).appComponent.inject(this)
+
+        presenter.attachView(this)
     }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_city_list, container, false)
+        return inflater.inflate(R.layout.fragment_city_list, container, false).also {
+            presenter.viewIsReady()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch {
-            val response = weatherAdiService.weatherByCityId("2172797")
-            Timber.i("response = $response")
-        }
-
         view.findViewById<Button>(R.id.button_first).setOnClickListener {
-            findNavController().navigate(R.id.action_CityListFragment_to_CityDetailsFragment)
+            presenter.onCityClicked(0) // TODO
         }
+    }
+
+    override fun showCityList(list: LiveData<List<CityWithWeather>>) {
+        list.observe(viewLifecycleOwner, Observer {
+            // TODO
+        })
+    }
+
+    override fun showCityDetails(cityId: Int) {
+        findNavController().navigate(R.id.action_CityListFragment_to_CityDetailsFragment) // TODO
+    }
+
+    override fun getScope(): CoroutineScope {
+        return lifecycleScope
+    }
+
+    override fun showMessage(messageResId: Int) {
+        Toast.makeText(context, messageResId, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun back() {
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detachView()
     }
 }

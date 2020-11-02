@@ -11,12 +11,17 @@ import ru.ahtartam.weatherapp.WeatherApp
 import ru.ahtartam.weatherapp.api.WeatherAdiService
 import ru.ahtartam.weatherapp.db.DatabaseProvider
 import ru.ahtartam.weatherapp.db.DatabaseProviderImpl
+import ru.ahtartam.weatherapp.mvp.CityListContract
+import ru.ahtartam.weatherapp.mvp.CityListPresenter
 
 @Module(includes = [MainModule.ProvidesModule::class])
 interface MainModule {
 
     @Binds
     fun bindDatabaseProvider(impl: DatabaseProviderImpl): DatabaseProvider
+
+    @Binds
+    fun bindCityListPresenter(impl: CityListPresenter): CityListContract.Presenter
 
     @Module
     class ProvidesModule {
