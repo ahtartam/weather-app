@@ -43,16 +43,16 @@ class CityDetailsFragment : Fragment(), CityDetailsContract.View {
     }
 
     override fun showCityDetails(info: LiveData<CityWithWeather>) {
-        info.observe(viewLifecycleOwner, Observer {
-            city_name.text = it.city.name
-            current_temperature.text = getString(R.string.current_temperature, it.weather?.temperature)
+        info.observe(viewLifecycleOwner, Observer { value ->
+            city_name.text = value.city.name
+            current_temperature.text = value.weather?.temperature?.let { getString(R.string.current_temperature, it) } ?: "N/A"
         })
     }
 
     override fun showDailyForecast(forecast: LiveData<CityWithDailyForecast>) {
         forecast.observe(viewLifecycleOwner, Observer { value ->
             daily_forecast.text = value.forecastList?.joinToString("\n") {
-                "${SimpleDateFormat.getDateInstance().format(it.date)}  --  ${it.temperature}"
+                "${SimpleDateFormat.getDateInstance().format(it.date)}      ${getString(R.string.temperature, it.temperature)}"
             }
         })
     }
