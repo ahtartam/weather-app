@@ -12,8 +12,8 @@ abstract class PresenterBase<V : MvpView> : MvpPresenter<V> {
         view = null
     }
 
-    open fun getView(): V {
-        return checkNotNull(view)
+    override fun getView(): V? {
+        return view
     }
 
     protected open fun isViewAttached(): Boolean {

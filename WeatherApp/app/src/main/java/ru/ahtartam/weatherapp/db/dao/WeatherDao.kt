@@ -1,7 +1,20 @@
 package ru.ahtartam.weatherapp.db.dao
 
-import androidx.room.Dao
+import androidx.lifecycle.LiveData
+import androidx.room.*
+import ru.ahtartam.weatherapp.model.CityWithWeather
+import ru.ahtartam.weatherapp.model.Weather
 
 @Dao
 interface WeatherDao {
+    @Transaction
+    @Query("SELECT * FROM weather")
+    fun subscribeToCityWithWeatherList(): LiveData<List<CityWithWeather>>
+
+    @Transaction
+    @Query("SELECT * FROM weather")
+    suspend fun getCityWithWeatherList(): List<CityWithWeather>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(list: List<Weather>)
 }

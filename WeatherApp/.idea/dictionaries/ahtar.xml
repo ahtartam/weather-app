@@ -2,6 +2,7 @@
   <dictionary name="ahtar">
     <words>
       <w>textsize</w>
+      <w>upsert</w>
     </words>
   </dictionary>
 </component>

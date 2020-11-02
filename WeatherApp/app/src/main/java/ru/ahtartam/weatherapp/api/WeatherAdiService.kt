@@ -9,7 +9,7 @@ private val weatherApiKey = "a913876322cbac7165b3285a9b1d09e7"
 interface WeatherAdiService {
     @GET("weather")
     suspend fun weatherByCityId(
-        @Query("id") cityId: String,
+        @Query("id") cityId: Int,
         @Query("appid") apiKey: String = weatherApiKey,
         @Query("units") units: String = "metric"
     ): WeatherResponse

@@ -24,7 +24,6 @@ class DatabaseProviderImpl @Inject constructor(
             "weather.db"
         )
             .createFromAsset("weather.db")
-            .fallbackToDestructiveMigration()
             .build()
     }
 }

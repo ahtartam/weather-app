@@ -6,5 +6,5 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "weather")
 data class Weather(
     @PrimaryKey val cityId: Int,
-    val temperature: String?
+    val temperature: Float?
 )

@@ -5,12 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.coroutines.CoroutineScope
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
@@ -22,6 +23,9 @@ class CityListFragment : Fragment(), CityListContract.View {
 
     @Inject
     lateinit var presenter: CityListContract.Presenter
+
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var adapter: CityListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,14 +46,20 @@ class CityListFragment : Fragment(), CityListContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<Button>(R.id.button_first).setOnClickListener {
-            presenter.onCityClicked(0) // TODO
+        adapter = CityListAdapter {
+            presenter.onCityClicked(it)
+        }
+        view.findViewById<RecyclerView>(R.id.recycler).adapter = adapter
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh)
+        swipeRefreshLayout.setOnRefreshListener {
+            presenter.refresh()
         }
     }
 
     override fun showCityList(list: LiveData<List<CityWithWeather>>) {
         list.observe(viewLifecycleOwner, Observer {
-            // TODO
+            swipeRefreshLayout.isRefreshing = false
+            adapter.takeData(it)
         })
     }
 

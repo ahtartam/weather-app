@@ -6,13 +6,23 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import ru.ahtartam.weatherapp.di.App
 import ru.ahtartam.weatherapp.di.ApplicationComponent
 import ru.ahtartam.weatherapp.di.DaggerApplicationComponent
+import ru.ahtartam.weatherapp.mvp.CityListContract
 import timber.log.Timber
+import javax.inject.Inject
 
 class WeatherApp : Application(), App, Application.ActivityLifecycleCallbacks {
     val appComponent: ApplicationComponent = DaggerApplicationComponent.create()
+
+    @Inject
+    lateinit var presenter: CityListContract.Presenter
+
+    private val appJob = SupervisorJob()
+    private val appScope = CoroutineScope(appJob)
 
     companion object {
         var instance: App? = null
@@ -20,9 +30,10 @@ class WeatherApp : Application(), App, Application.ActivityLifecycleCallbacks {
     }
 
     override fun onCreate() {
-        super.onCreate()
-
         instance = this
+        super.onCreate()
+        appComponent.inject(this)
+
         registerActivityLifecycleCallbacks(this)
         Timber.plant(Timber.DebugTree())
     }
@@ -31,6 +42,8 @@ class WeatherApp : Application(), App, Application.ActivityLifecycleCallbacks {
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
             Timber.d("NetworkCallback.onAvailable($network)")
+
+            presenter.refresh(appScope)
         }
     }
 

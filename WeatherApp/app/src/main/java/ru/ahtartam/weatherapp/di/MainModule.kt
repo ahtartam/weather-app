@@ -13,6 +13,7 @@ import ru.ahtartam.weatherapp.db.DatabaseProvider
 import ru.ahtartam.weatherapp.db.DatabaseProviderImpl
 import ru.ahtartam.weatherapp.mvp.CityListContract
 import ru.ahtartam.weatherapp.mvp.CityListPresenter
+import javax.inject.Singleton
 
 @Module(includes = [MainModule.ProvidesModule::class])
 interface MainModule {
@@ -21,6 +22,7 @@ interface MainModule {
     fun bindDatabaseProvider(impl: DatabaseProviderImpl): DatabaseProvider
 
     @Binds
+    @Singleton
     fun bindCityListPresenter(impl: CityListPresenter): CityListContract.Presenter
 
     @Module
