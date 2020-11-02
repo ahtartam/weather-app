@@ -28,7 +28,7 @@ class CityListPresenter @Inject constructor(
     }
 
     override fun refresh(scope: CoroutineScope?) {
-        scope?.launch(Dispatchers.IO + CoroutineExceptionHandler { context, throwable ->
+        scope?.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
             Timber.e(throwable)
             getView()?.showMessage(throwable.message ?: throwable::class.java.name)
         }) {

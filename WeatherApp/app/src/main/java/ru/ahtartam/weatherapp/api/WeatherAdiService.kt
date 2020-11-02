@@ -5,8 +5,7 @@ import retrofit2.http.Query
 import ru.ahtartam.weatherapp.api.response.DailyForecastResponse
 import ru.ahtartam.weatherapp.api.response.WeatherResponse
 
-private val weatherApiKey = "a913876322cbac7165b3285a9b1d09e7"
-private val dailyForecastApiKey = weatherApiKey
+private const val weatherApiKey = "a913876322cbac7165b3285a9b1d09e7"
 
 interface WeatherAdiService {
     @GET("weather")

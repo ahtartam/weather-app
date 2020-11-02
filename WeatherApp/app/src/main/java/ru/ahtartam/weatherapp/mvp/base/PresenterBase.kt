@@ -1,6 +1,5 @@
 package ru.ahtartam.weatherapp.mvp.base
 
-
 abstract class PresenterBase<V : MvpView> : MvpPresenter<V> {
     private var view: V? = null
 
@@ -21,5 +20,4 @@ abstract class PresenterBase<V : MvpView> : MvpPresenter<V> {
     }
 
     override fun destroy() {}
-
 }
