@@ -44,17 +44,30 @@ class AddCityPresenter @Inject constructor(
                 getView()?.showCityList(list)
             }
 
-            if (isSelected) {
-                val response = weatherAdiService.weatherByCityName(text)
-                if (response.cityName == text) {
-                    db.weatherDao().upsert(listOf(response.mapToWeather()))
-                    withContext(Dispatchers.Main) {
-                        getView()?.back()
+            if (isSelected && text.isNotEmpty()) {
+                languagesForWebSearch.forEach { lang ->
+                    val response = weatherAdiService.weatherByCityName(
+                        cityName = text,
+                        lang = lang
+                    )
+                    if (response.cityName == text) {
+                        db.weatherDao().upsert(listOf(response.mapToWeather()))
+                        withContext(Dispatchers.Main) {
+                            getView()?.back()
+                        }
+                        return@launch
                     }
-                } else {
-                    getView()?.showMessage(R.string.city_not_found)
                 }
+
+                getView()?.showMessage(R.string.city_not_found)
             }
         }
+    }
+
+    companion object {
+        private val languagesForWebSearch = listOf(
+            "ru",
+            "en"
+        )
     }
 }
