@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -44,8 +45,9 @@ class CityDetailsFragment : Fragment(), CityDetailsContract.View {
 
     override fun showCityDetails(info: LiveData<CityWithWeather>) {
         info.observe(viewLifecycleOwner, Observer { value ->
-            city_name.text = value.city.name
-            current_temperature.text = value.weather?.temperature?.let { getString(R.string.current_temperature, it) } ?: "N/A"
+            city_name.text = value.getCityName()
+            current_temperature.text = value.getCurrentTemp()
+                ?.let { getString(R.string.current_temperature, it) } ?: "N/A"
         })
     }
 
@@ -58,6 +60,7 @@ class CityDetailsFragment : Fragment(), CityDetailsContract.View {
     }
 
     override fun getScope(): CoroutineScope = lifecycleScope
+    override fun showMessage(@StringRes messageResId: Int) = showMessage(getString(messageResId))
 
     override fun showMessage(message: String) {
         view?.post {

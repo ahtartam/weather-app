@@ -8,4 +8,7 @@ data class CityWithWeather(
     val weather: Weather?,
     @Relation(parentColumn = "cityId", entityColumn = "id")
     val city: City
-)
+) {
+    fun getCityName() = weather?.cityName ?: city.name
+    fun getCurrentTemp() = weather?.temperature
+}

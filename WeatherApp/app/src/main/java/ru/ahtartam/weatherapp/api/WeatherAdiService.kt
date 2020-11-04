@@ -16,6 +16,14 @@ interface WeatherAdiService {
         @Query("lang") lang: String = "ru"
     ): WeatherResponse
 
+    @GET("weather")
+    suspend fun weatherByCityName(
+        @Query("q") cityName: String,
+        @Query("appid") apiKey: String = weatherApiKey,
+        @Query("units") units: String = "metric",
+        @Query("lang") lang: String = "ru"
+    ): WeatherResponse
+
     /*
     * Оказалось, что "Daily Forecast 16 Days" (https://openweathermap.org/forecast16) недоступен
     * из бесплатного аккаунта. Пришлось переходить на "One Call API" (https://openweathermap.org/api/one-call-api).

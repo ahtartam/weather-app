@@ -14,7 +14,7 @@ import ru.ahtartam.weatherapp.model.Weather
         City::class,
         Weather::class,
         DailyForecast::class
-    ], version = 1
+    ], version = 2
 )
 abstract class Database : RoomDatabase() {
     abstract fun cityDao(): CityDao

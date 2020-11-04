@@ -1,17 +1,21 @@
 package ru.ahtartam.weatherapp.ui.addcity
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_add_city.*
 import kotlinx.coroutines.CoroutineScope
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
@@ -49,8 +53,20 @@ class AddCityFragment : Fragment(), AddCityContract.View {
 
         searchText = view.findViewById(R.id.search_city)
         searchText.addTextChangedListener {
-            presenter.search(it.toString())
+            presenter.search(it.toString(), false)
         }
+        searchText.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                presenter.search(searchText.text.toString(), true)
+                return@OnEditorActionListener true
+            }
+            false
+        })
+
+        search_button.setOnClickListener {
+            presenter.search(searchText.text.toString(), true)
+        }
+
         adapter = SelectCityAdapter {
             presenter.onCityClicked(it)
         }
@@ -62,6 +78,7 @@ class AddCityFragment : Fragment(), AddCityContract.View {
     }
 
     override fun getScope(): CoroutineScope = lifecycleScope
+    override fun showMessage(@StringRes messageResId: Int) = showMessage(getString(messageResId))
 
     override fun showMessage(message: String) {
         view?.post {

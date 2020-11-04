@@ -8,6 +8,8 @@ import ru.ahtartam.weatherapp.model.Weather
 data class WeatherResponse(
     @field:Json(name = "id")
     val cityId: Int,
+    @field:Json(name = "name")
+    val cityName: String,
     @field:Json(name = "main")
     val main: MainGroup?
 ) {
@@ -19,6 +21,7 @@ data class WeatherResponse(
     fun mapToWeather(): Weather {
         return Weather(
             cityId = cityId,
+            cityName = cityName,
             temperature = main?.temperature
         )
     }

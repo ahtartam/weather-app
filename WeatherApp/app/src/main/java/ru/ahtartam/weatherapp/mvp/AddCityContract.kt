@@ -10,6 +10,6 @@ interface AddCityContract {
     }
     interface Presenter : MvpPresenter<View> {
         fun onCityClicked(cityId: Int)
-        fun search(text: String)
+        fun search(text: String, isSelected: Boolean)
     }
 }

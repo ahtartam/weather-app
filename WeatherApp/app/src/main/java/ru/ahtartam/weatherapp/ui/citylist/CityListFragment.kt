@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -88,6 +89,7 @@ class CityListFragment : Fragment(), CityListContract.View {
     }
 
     override fun getScope(): CoroutineScope = lifecycleScope
+    override fun showMessage(@StringRes messageResId: Int) = showMessage(getString(messageResId))
 
     override fun showMessage(message: String) {
         view?.post {

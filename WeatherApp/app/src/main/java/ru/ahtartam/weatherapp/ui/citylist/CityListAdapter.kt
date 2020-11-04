@@ -39,11 +39,10 @@ class CityListAdapter(
         holder.view.setOnClickListener {
             onCityClick(list[position].city.id)
         }
-        holder.textCityName.text = list[position].city.name
-        val temperature = list[position].weather?.temperature
-        holder.textTemperature.text = if (temperature != null)
-            holder.view.context.getString(R.string.current_temperature, temperature)
-        else "N/A"
+        val item = list[position]
+        holder.textCityName.text = item.getCityName()
+        holder.textTemperature.text = item.getCurrentTemp()
+            ?.let { holder.view.context.getString(R.string.current_temperature, it) } ?: "N/A"
     }
 
     override fun getItemCount() = list.size

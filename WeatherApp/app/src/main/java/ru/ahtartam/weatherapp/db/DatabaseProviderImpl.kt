@@ -2,6 +2,7 @@ package ru.ahtartam.weatherapp.db
 
 import android.content.Context
 import androidx.room.Room
+import ru.ahtartam.weatherapp.db.migrations.Migration1To2
 import javax.inject.Inject
 
 class DatabaseProviderImpl @Inject constructor(
@@ -23,6 +24,9 @@ class DatabaseProviderImpl @Inject constructor(
             Database::class.java,
             "weather.db"
         )
+            .addMigrations(
+                Migration1To2()
+            )
             .createFromAsset("weather.db")
             .build()
     }

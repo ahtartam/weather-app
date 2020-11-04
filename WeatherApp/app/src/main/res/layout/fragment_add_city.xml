@@ -8,14 +8,26 @@
 
     <EditText
         android:id="@+id/search_city"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/type_city_for_search"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/search_button"
         android:inputType="textCapWords"
+        android:imeOptions="actionSearch"
         android:lines="1"
         android:importantForAutofill="no" />
+
+    <ImageButton
+        android:id="@+id/search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_search"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/search_city"
+        android:contentDescription="@string/search" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
