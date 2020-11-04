@@ -21,4 +21,7 @@ interface WeatherDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(list: List<Weather>)
+
+    @Query("DELETE FROM weather WHERE cityId = :cityId")
+    suspend fun deleteByCityId(cityId: Int)
 }

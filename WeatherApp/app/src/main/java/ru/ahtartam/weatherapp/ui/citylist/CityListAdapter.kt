@@ -9,7 +9,8 @@ import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.model.CityWithWeather
 
 class CityListAdapter(
-    private val onCityClick: (cityId: Int) -> Unit
+    private val onCityClick: (cityId: Int) -> Unit,
+    private val onCityDelete: (cityId: Int) -> Unit
 ) : RecyclerView.Adapter<CityListAdapter.ViewHolder>() {
     private var list: List<CityWithWeather> = listOf()
 
@@ -23,6 +24,7 @@ class CityListAdapter(
     ) : RecyclerView.ViewHolder(view) {
         val textCityName: TextView = view.findViewById(R.id.city_name)
         val textTemperature: TextView = view.findViewById(R.id.city_temperature)
+        val deleteButton: View = view.findViewById(R.id.delete_button)
     }
 
     override fun onCreateViewHolder(
@@ -37,12 +39,18 @@ class CityListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.view.setOnClickListener {
-            onCityClick(list[position].city.id)
+            onCityClick(list[position].getCityId())
         }
+
         val item = list[position]
+
         holder.textCityName.text = item.getCityName()
         holder.textTemperature.text = item.getCurrentTemp()
             ?.let { holder.view.context.getString(R.string.current_temperature, it) } ?: "N/A"
+
+        holder.deleteButton.setOnClickListener {
+            onCityDelete(item.getCityId())
+        }
     }
 
     override fun getItemCount() = list.size

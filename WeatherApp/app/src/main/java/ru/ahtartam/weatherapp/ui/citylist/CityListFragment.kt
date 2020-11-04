@@ -56,9 +56,14 @@ class CityListFragment : Fragment(), CityListContract.View {
             )
         }
 
-        adapter = CityListAdapter {
-            presenter.onCityClicked(it)
-        }
+        adapter = CityListAdapter(
+            onCityClick = { cityId ->
+                presenter.onCityClicked(cityId)
+            },
+            onCityDelete = { cityId ->
+                presenter.onCityDelete(cityId)
+            }
+        )
         view.findViewById<RecyclerView>(R.id.recycler).adapter = adapter
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh)
         swipeRefreshLayout.setOnRefreshListener {

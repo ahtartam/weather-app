@@ -13,6 +13,7 @@ interface CityListContract {
     }
     interface Presenter : MvpPresenter<View> {
         fun onCityClicked(cityId: Int)
+        fun onCityDelete(cityId: Int)
         fun refresh(scope: CoroutineScope? = getView()?.getScope())
     }
 }

@@ -7,5 +7,6 @@
     <string name="temperature">%.0f\u00B0C</string>
     <string name="type_city_for_search">Type City for search…</string>
     <string name="search">Search</string>
+    <string name="delete">Delete</string>
     <string name="city_not_found">City not found.</string>
 </resources>

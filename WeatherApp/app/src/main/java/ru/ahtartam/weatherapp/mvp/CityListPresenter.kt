@@ -27,13 +27,20 @@ class CityListPresenter @Inject constructor(
         getView()?.showCityDetails(cityId)
     }
 
+    override fun onCityDelete(cityId: Int) {
+        getView()?.getScope()?.launch {
+            db.weatherDao().deleteByCityId(cityId)
+            db.dailyForecastDao().deleteByCityId(cityId)
+        }
+    }
+
     override fun refresh(scope: CoroutineScope?) {
         scope?.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
             Timber.e(throwable)
             getView()?.showMessage(throwable.message ?: throwable::class.java.name)
         }) {
             val weather = db.weatherDao().getCityWithWeatherList().map {
-                weatherAdiService.weatherByCityId(it.city.id).mapToWeather()
+                weatherAdiService.weatherByCityId(it.getCityId()).mapToWeather()
             }
             db.weatherDao().upsert(weather)
         }
