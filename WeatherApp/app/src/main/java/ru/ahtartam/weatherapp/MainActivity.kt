@@ -21,20 +21,25 @@ class MainActivity : AppCompatActivity(), NavController.OnDestinationChangedList
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        val host: NavHostFragment = supportFragmentManager
+        val host = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment? ?: return
         val navController = host.navController
         setupActionBarWithNavController(navController, AppBarConfiguration(navController.graph))
-
-        navController.addOnDestinationChangedListener(this)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return findNavController(R.id.nav_host_fragment).navigateUp()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStart() {
+        super.onStart()
+
+        findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
         findNavController(R.id.nav_host_fragment).removeOnDestinationChangedListener(this)
     }
 
