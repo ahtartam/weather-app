@@ -5,29 +5,30 @@
     android:layout_margin="@dimen/default_margin"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/center_line"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5"/>
+
     <TextView
         android:id="@+id/city_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/textsize_big"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:lines="1"
+        app:autoSizeMaxTextSize="@dimen/textsize_big"
+        app:autoSizeTextType="uniform"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/center_line"
+        app:layout_constraintEnd_toStartOf="@id/city_temperature"
         tools:text="City Name"/>
+
     <TextView
         android:id="@+id/city_temperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/center_line"
+        app:layout_constraintStart_toEndOf="@id/city_name"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="33"/>
+        tools:text="33C"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
