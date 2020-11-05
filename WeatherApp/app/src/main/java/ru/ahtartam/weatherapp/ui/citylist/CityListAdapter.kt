@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.ahtartam.weatherapp.R
-import ru.ahtartam.weatherapp.model.CityWithWeather
+import ru.ahtartam.weatherapp.model.Weather
 
 class CityListAdapter(
     private val onCityClick: (cityId: Int) -> Unit,
     private val onCityDelete: (cityId: Int) -> Unit
 ) : RecyclerView.Adapter<CityListAdapter.ViewHolder>() {
-    private var list: List<CityWithWeather> = listOf()
+    private var list: List<Weather> = listOf()
 
-    fun takeData(list: List<CityWithWeather>) {
+    fun takeData(list: List<Weather>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -39,17 +39,17 @@ class CityListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.view.setOnClickListener {
-            onCityClick(list[position].getCityId())
+            onCityClick(list[position].cityId)
         }
 
         val item = list[position]
 
-        holder.textCityName.text = item.getCityName()
-        holder.textTemperature.text = item.getCurrentTemp()
+        holder.textCityName.text = item.cityName
+        holder.textTemperature.text = item.temperature
             ?.let { holder.view.context.getString(R.string.current_temperature, it) } ?: "N/A"
 
         holder.deleteButton.setOnClickListener {
-            onCityDelete(item.getCityId())
+            onCityDelete(item.cityId)
         }
     }
 

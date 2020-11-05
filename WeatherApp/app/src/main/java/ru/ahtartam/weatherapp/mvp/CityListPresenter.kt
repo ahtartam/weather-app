@@ -40,7 +40,7 @@ class CityListPresenter @Inject constructor(
             getView()?.showMessage(throwable.message ?: throwable::class.java.name)
         }) {
             db.weatherDao().getCityWithWeatherList().map {
-                weatherAdiService.weatherByCityId(it.getCityId()).mapToWeather()
+                weatherAdiService.weatherByCityName(it.cityName).mapToWeather()
             }.also { weather ->
                 if (weather.isEmpty()) {
                     getView()?.onEmptyResult()

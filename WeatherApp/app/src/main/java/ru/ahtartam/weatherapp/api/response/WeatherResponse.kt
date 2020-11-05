@@ -10,6 +10,8 @@ data class WeatherResponse(
     val cityId: Int,
     @field:Json(name = "name")
     val cityName: String,
+    @field:Json(name = "coord")
+    val coord: CoordGroup,
     @field:Json(name = "main")
     val main: MainGroup?
 ) {
@@ -17,11 +19,17 @@ data class WeatherResponse(
         @field:Json(name = "temp")
         val temperature: Float?
     )
+    data class CoordGroup (
+        val lat: Float,
+        val lon: Float
+    )
 
     fun mapToWeather(): Weather {
         return Weather(
             cityId = cityId,
             cityName = cityName,
+            lat = coord.lat,
+            lon = coord.lon,
             temperature = main?.temperature
         )
     }

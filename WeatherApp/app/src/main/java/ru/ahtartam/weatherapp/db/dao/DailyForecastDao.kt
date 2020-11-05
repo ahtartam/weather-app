@@ -10,7 +10,7 @@ import ru.ahtartam.weatherapp.model.DailyForecast
 @TypeConverters(Converters::class)
 interface DailyForecastDao {
     @Transaction
-    @Query("SELECT * FROM citylist WHERE id = :cityId")
+    @Query("SELECT * FROM weather WHERE cityId = :cityId")
     fun subscribeToCityWithDailyForecast(cityId: Int): LiveData<CityWithDailyForecast>
 
     @Query("DELETE FROM forecast WHERE cityId = :cityId")

@@ -6,7 +6,6 @@ import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.api.WeatherAdiService
 import ru.ahtartam.weatherapp.db.Database
 import ru.ahtartam.weatherapp.db.DatabaseProvider
-import ru.ahtartam.weatherapp.model.Weather
 import ru.ahtartam.weatherapp.mvp.base.PresenterBase
 import timber.log.Timber
 import javax.inject.Inject
@@ -18,19 +17,11 @@ class AddCityPresenter @Inject constructor(
     private val db: Database = dbProvider.get()
 
     override fun viewIsReady() {
-        search("", false)
     }
 
-    override fun onCityClicked(cityId: Int) {
-        getView()?.getScope()?.launch(Dispatchers.IO) {
-            db.weatherDao().upsert(listOf(Weather(cityId)))
-            withContext(Dispatchers.Main) {
-                getView()?.back()
-            }
-        }
-    }
+    override fun search(text: String) {
+        if (text.isEmpty()) return
 
-    override fun search(text: String, isSelected: Boolean) {
         getView()?.getScope()?.launch(Dispatchers.IO + CoroutineExceptionHandler { _, throwable ->
             Timber.e(throwable)
             if (throwable is HttpException && throwable.code() == 404) {
@@ -39,35 +30,15 @@ class AddCityPresenter @Inject constructor(
                 getView()?.showMessage(throwable.message ?: throwable::class.java.name)
             }
         }) {
-            val list = db.cityDao().searchCityList("%$text%")
-            withContext(Dispatchers.Main) {
-                getView()?.showCityList(list)
-            }
-
-            if (isSelected && text.isNotEmpty()) {
-                languagesForWebSearch.forEach { lang ->
-                    val response = weatherAdiService.weatherByCityName(
-                        cityName = text,
-                        lang = lang
-                    )
-                    if (response.cityName == text) {
-                        db.weatherDao().upsert(listOf(response.mapToWeather()))
-                        withContext(Dispatchers.Main) {
-                            getView()?.back()
-                        }
-                        return@launch
-                    }
+            val response = weatherAdiService.weatherByCityName(text)
+            if (response.cityName == text) {
+                db.weatherDao().upsert(listOf(response.mapToWeather()))
+                withContext(Dispatchers.Main) {
+                    getView()?.back()
                 }
-
+            } else {
                 getView()?.showMessage(R.string.city_not_found)
             }
         }
-    }
-
-    companion object {
-        private val languagesForWebSearch = listOf(
-            "ru",
-            "en"
-        )
     }
 }

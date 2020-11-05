@@ -10,16 +10,13 @@ import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_add_city.*
 import kotlinx.coroutines.CoroutineScope
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
-import ru.ahtartam.weatherapp.model.City
 import ru.ahtartam.weatherapp.mvp.AddCityContract
 import ru.ahtartam.weatherapp.ui.citylist.CityListFragment
 import javax.inject.Inject
@@ -30,7 +27,6 @@ class AddCityFragment : Fragment(), AddCityContract.View {
     lateinit var presenter: AddCityContract.Presenter
 
     private lateinit var searchText: EditText
-    private lateinit var adapter: SelectCityAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,9 +48,6 @@ class AddCityFragment : Fragment(), AddCityContract.View {
         super.onViewCreated(view, savedInstanceState)
 
         searchText = view.findViewById(R.id.search_city)
-        searchText.addTextChangedListener {
-            presenter.search(it.toString(), false)
-        }
         searchText.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 presenter.search(searchText.text.toString())
@@ -63,17 +56,8 @@ class AddCityFragment : Fragment(), AddCityContract.View {
         })
 
         search_button.setOnClickListener {
-            presenter.search(searchText.text.toString(), true)
+            presenter.search(searchText.text.toString())
         }
-
-        adapter = SelectCityAdapter {
-            presenter.onCityClicked(it)
-        }
-        view.findViewById<RecyclerView>(R.id.recycler).adapter = adapter
-    }
-
-    override fun showCityList(list: List<City>) {
-        adapter.takeData(list)
     }
 
     override fun getScope(): CoroutineScope = lifecycleScope

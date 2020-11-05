@@ -2,7 +2,10 @@ package ru.ahtartam.weatherapp.db
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import ru.ahtartam.weatherapp.db.migrations.Migration1To2
+import ru.ahtartam.weatherapp.db.migrations.Migration2To3
 import javax.inject.Inject
 
 class DatabaseProviderImpl @Inject constructor(
@@ -24,10 +27,17 @@ class DatabaseProviderImpl @Inject constructor(
             Database::class.java,
             "weather.db"
         )
+            .addCallback(object : RoomDatabase.Callback() {
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    super.onCreate(db)
+                    db.execSQL("insert into weather (cityId, cityName, temperature, lat, lon) VALUES (524901, 'Moscow', NULL, 55.75, 37.6199989318848)")
+                    db.execSQL("insert into weather (cityId, cityName, temperature, lat, lon) VALUES (498817, 'Saint Petersburg', NULL, 59.8899993896484, 30.2600002288818)")
+                }
+            })
             .addMigrations(
-                Migration1To2()
+                Migration1To2(),
+                Migration2To3()
             )
-            .createFromAsset("weather.db")
             .build()
     }
 }

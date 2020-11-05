@@ -42,8 +42,8 @@ class CityDetailsPresenter @Inject constructor(
             getView()?.showMessage(throwable.message ?: throwable::class.java.name)
         }) {
             cityId?.also { cityId ->
-                val city = db.cityDao().getCityById(cityId)
-                val forecast = weatherAdiService.dailyForecastByCityId(city.lat, city.lon).mapToListDailyForecast(cityId)
+                val weather = db.weatherDao().getWeatherByCityId(cityId)
+                val forecast = weatherAdiService.dailyForecastByCityId(weather.lat, weather.lon).mapToListDailyForecast(cityId)
                 db.dailyForecastDao().deleteByCityId(cityId)
                 db.dailyForecastDao().upsert(forecast)
             }

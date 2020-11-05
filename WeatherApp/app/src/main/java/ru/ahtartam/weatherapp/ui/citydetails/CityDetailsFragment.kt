@@ -16,7 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
 import ru.ahtartam.weatherapp.model.CityWithDailyForecast
-import ru.ahtartam.weatherapp.model.CityWithWeather
+import ru.ahtartam.weatherapp.model.Weather
 import ru.ahtartam.weatherapp.mvp.CityDetailsContract
 import java.text.SimpleDateFormat
 import javax.inject.Inject
@@ -43,10 +43,10 @@ class CityDetailsFragment : Fragment(), CityDetailsContract.View {
         }
     }
 
-    override fun showCityDetails(info: LiveData<CityWithWeather>) {
+    override fun showCityDetails(info: LiveData<Weather>) {
         info.observe(viewLifecycleOwner, Observer { value ->
-            city_name.text = value.getCityName()
-            current_temperature.text = value.getCurrentTemp()
+            city_name.text = value.cityName
+            current_temperature.text = value.temperature
                 ?.let { getString(R.string.current_temperature, it) } ?: "N/A"
         })
     }
