@@ -86,6 +86,10 @@ class CityListFragment : Fragment(), CityListContract.View {
         })
     }
 
+    override fun onEmptyResult() {
+        swipeRefreshLayout.isRefreshing = false
+    }
+
     override fun showCityDetails(cityId: Int) {
         findNavController().navigate(
             R.id.action_CityListFragment_to_CityDetailsFragment,

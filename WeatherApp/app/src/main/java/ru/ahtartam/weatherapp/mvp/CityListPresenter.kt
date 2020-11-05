@@ -39,10 +39,15 @@ class CityListPresenter @Inject constructor(
             Timber.e(throwable)
             getView()?.showMessage(throwable.message ?: throwable::class.java.name)
         }) {
-            val weather = db.weatherDao().getCityWithWeatherList().map {
+            db.weatherDao().getCityWithWeatherList().map {
                 weatherAdiService.weatherByCityId(it.getCityId()).mapToWeather()
+            }.also { weather ->
+                if (weather.isEmpty()) {
+                    getView()?.onEmptyResult()
+                } else {
+                    db.weatherDao().upsert(weather)
+                }
             }
-            db.weatherDao().upsert(weather)
         }
     }
 }

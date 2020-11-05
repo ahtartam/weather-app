@@ -9,6 +9,7 @@ import ru.ahtartam.weatherapp.mvp.base.MvpView
 interface CityListContract {
     interface View : MvpView {
         fun showCityList(list: LiveData<List<CityWithWeather>>)
+        fun onEmptyResult()
         fun showCityDetails(cityId: Int)
     }
     interface Presenter : MvpPresenter<View> {
