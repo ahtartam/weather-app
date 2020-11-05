@@ -57,10 +57,9 @@ class AddCityFragment : Fragment(), AddCityContract.View {
         }
         searchText.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                presenter.search(searchText.text.toString(), true)
-                return@OnEditorActionListener true
-            }
-            false
+                presenter.search(searchText.text.toString())
+                true
+            } else false
         })
 
         search_button.setOnClickListener {
