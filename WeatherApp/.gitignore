@@ -3,10 +3,17 @@
 /local.properties
 /.idea/caches
 /.idea/libraries
+/.idea/compiler.xml
+/.idea/jarRepositories.xml
 /.idea/modules.xml
 /.idea/workspace.xml
-/.idea/navEditor.xml
+# Uncomment next line if keeping position of elements in Navigation Editor is not relevant for you
+# /.idea/navEditor.xml
+/.idea/gradle.xml
+/.idea/libraries
 /.idea/assetWizardSettings.xml
+.idea/tasks.xml
+.idea/vcs.xml
 .DS_Store
 /build
 /captures
