@@ -3,6 +3,7 @@
     <words>
       <w>appid</w>
       <w>citylist</w>
+      <w>coord</w>
       <w>textsize</w>
       <w>upsert</w>
     </words>

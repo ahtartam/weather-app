@@ -15,10 +15,13 @@ data class WeatherResponse(
     @field:Json(name = "main")
     val main: MainGroup?
 ) {
+    @JsonClass(generateAdapter = true)
     data class MainGroup (
         @field:Json(name = "temp")
         val temperature: Float?
     )
+
+    @JsonClass(generateAdapter = true)
     data class CoordGroup (
         val lat: Float,
         val lon: Float
