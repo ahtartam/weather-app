@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.ahtartam.weatherapp.R
-import ru.ahtartam.weatherapp.model.Weather
+import ru.ahtartam.weatherapp.data.db.model.Weather
 
 class CityListAdapter(
     private val onCityClick: (cityId: Int) -> Unit,

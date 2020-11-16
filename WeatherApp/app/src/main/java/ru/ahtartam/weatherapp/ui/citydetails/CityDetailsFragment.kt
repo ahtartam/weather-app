@@ -15,9 +15,9 @@ import kotlinx.android.synthetic.main.fragment_city_details.*
 import kotlinx.coroutines.CoroutineScope
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
-import ru.ahtartam.weatherapp.model.CityWithDailyForecast
-import ru.ahtartam.weatherapp.model.Weather
-import ru.ahtartam.weatherapp.mvp.CityDetailsContract
+import ru.ahtartam.weatherapp.data.db.model.CityWithDailyForecast
+import ru.ahtartam.weatherapp.data.db.model.Weather
+import ru.ahtartam.weatherapp.presentation.mvp.CityDetailsContract
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 

@@ -11,8 +11,8 @@ import kotlinx.coroutines.SupervisorJob
 import ru.ahtartam.weatherapp.di.App
 import ru.ahtartam.weatherapp.di.ApplicationComponent
 import ru.ahtartam.weatherapp.di.DaggerApplicationComponent
-import ru.ahtartam.weatherapp.mvp.CityDetailsContract
-import ru.ahtartam.weatherapp.mvp.CityListContract
+import ru.ahtartam.weatherapp.presentation.mvp.CityDetailsContract
+import ru.ahtartam.weatherapp.presentation.mvp.CityListContract
 import timber.log.Timber
 import javax.inject.Inject
 

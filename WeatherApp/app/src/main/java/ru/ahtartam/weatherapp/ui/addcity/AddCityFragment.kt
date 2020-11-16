@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.fragment_add_city.*
 import kotlinx.coroutines.CoroutineScope
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
-import ru.ahtartam.weatherapp.mvp.AddCityContract
+import ru.ahtartam.weatherapp.presentation.mvp.AddCityContract
 import ru.ahtartam.weatherapp.ui.citylist.CityListFragment
 import javax.inject.Inject
 
