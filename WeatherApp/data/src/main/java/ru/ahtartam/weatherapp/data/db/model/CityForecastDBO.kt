@@ -10,7 +10,7 @@ import java.util.*
     primaryKeys = ["cityId", "date"]
 )
 @TypeConverters(Converters::class)
-data class DailyForecast(
+data class CityForecastDBO(
     val cityId: Int,
     val date: Date,
     val temperature: Float?

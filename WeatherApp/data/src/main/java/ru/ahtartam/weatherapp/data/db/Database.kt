@@ -4,13 +4,13 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import ru.ahtartam.weatherapp.data.db.dao.DailyForecastDao
 import ru.ahtartam.weatherapp.data.db.dao.WeatherDao
-import ru.ahtartam.weatherapp.data.db.model.DailyForecast
-import ru.ahtartam.weatherapp.data.db.model.Weather
+import ru.ahtartam.weatherapp.data.db.model.CityForecastDBO
+import ru.ahtartam.weatherapp.data.db.model.CityWeatherDBO
 
 @Database(
     entities = [
-        Weather::class,
-        DailyForecast::class
+        CityWeatherDBO::class,
+        CityForecastDBO::class
     ], version = 3
 )
 abstract class Database : RoomDatabase() {

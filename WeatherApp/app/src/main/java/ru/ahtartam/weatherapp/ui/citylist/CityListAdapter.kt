@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.ahtartam.weatherapp.R
-import ru.ahtartam.weatherapp.data.db.model.Weather
+import ru.ahtartam.weatherapp.data.db.model.CityWeatherDBO
 
 class CityListAdapter(
     private val onCityClick: (cityId: Int) -> Unit,
     private val onCityDelete: (cityId: Int) -> Unit
 ) : RecyclerView.Adapter<CityListAdapter.ViewHolder>() {
-    private var list: List<Weather> = listOf()
+    private var list: List<CityWeatherDBO> = listOf()
 
-    fun takeData(list: List<Weather>) {
+    fun takeData(list: List<CityWeatherDBO>) {
         this.list = list
         notifyDataSetChanged()
     }

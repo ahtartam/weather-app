@@ -2,7 +2,7 @@ package ru.ahtartam.weatherapp.data.api.response
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import ru.ahtartam.weatherapp.data.db.model.Weather
+import ru.ahtartam.weatherapp.data.db.model.CityWeatherDBO
 
 @JsonClass(generateAdapter = true)
 data class WeatherResponse(
@@ -27,8 +27,8 @@ data class WeatherResponse(
         val lon: Float
     )
 
-    fun mapToWeather(): Weather {
-        return Weather(
+    fun mapToWeather(): CityWeatherDBO {
+        return CityWeatherDBO(
             cityId = cityId,
             cityName = cityName,
             lat = coord.lat,

@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "weather")
-data class Weather(
+data class CityWeatherDBO(
     @PrimaryKey val cityId: Int,
     val cityName: String,
     val lat: Float,

@@ -2,7 +2,7 @@ package ru.ahtartam.weatherapp.data.api.response
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import ru.ahtartam.weatherapp.data.db.model.DailyForecast
+import ru.ahtartam.weatherapp.data.db.model.CityForecastDBO
 import java.util.*
 
 @JsonClass(generateAdapter = true)
@@ -24,9 +24,9 @@ data class DailyForecastResponse(
         val day: Float
     )
 
-    fun mapToListDailyForecast(cityId: Int): List<DailyForecast> {
+    fun mapToListDailyForecast(cityId: Int): List<CityForecastDBO> {
         return daily.map {
-            DailyForecast(
+            CityForecastDBO(
                 cityId = cityId,
                 date = Date(it.date * 1000),
                 temperature = it.temperature.day

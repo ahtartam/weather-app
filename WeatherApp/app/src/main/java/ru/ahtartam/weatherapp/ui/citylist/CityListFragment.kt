@@ -18,7 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
-import ru.ahtartam.weatherapp.data.db.model.Weather
+import ru.ahtartam.weatherapp.data.db.model.CityWeatherDBO
 import ru.ahtartam.weatherapp.presentation.mvp.CityListContract
 import ru.ahtartam.weatherapp.ui.citydetails.CityDetailsFragment
 import javax.inject.Inject
@@ -79,7 +79,7 @@ class CityListFragment : Fragment(), CityListContract.View {
         }
     }
 
-    override fun showCityList(list: LiveData<List<Weather>>) {
+    override fun showCityList(list: LiveData<List<CityWeatherDBO>>) {
         list.observe(viewLifecycleOwner, Observer {
             swipeRefreshLayout.isRefreshing = false
             adapter.takeData(it)

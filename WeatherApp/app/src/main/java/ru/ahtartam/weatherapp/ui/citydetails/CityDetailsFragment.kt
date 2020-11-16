@@ -15,8 +15,8 @@ import kotlinx.android.synthetic.main.fragment_city_details.*
 import kotlinx.coroutines.CoroutineScope
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
-import ru.ahtartam.weatherapp.data.db.model.CityWithDailyForecast
-import ru.ahtartam.weatherapp.data.db.model.Weather
+import ru.ahtartam.weatherapp.data.db.model.CityWeatherWithForecastDBO
+import ru.ahtartam.weatherapp.data.db.model.CityWeatherDBO
 import ru.ahtartam.weatherapp.presentation.mvp.CityDetailsContract
 import java.text.SimpleDateFormat
 import javax.inject.Inject
@@ -43,7 +43,7 @@ class CityDetailsFragment : Fragment(), CityDetailsContract.View {
         }
     }
 
-    override fun showCityDetails(info: LiveData<Weather>) {
+    override fun showCityDetails(info: LiveData<CityWeatherDBO>) {
         info.observe(viewLifecycleOwner, Observer { value ->
             city_name.text = value.cityName
             current_temperature.text = value.temperature
@@ -51,7 +51,7 @@ class CityDetailsFragment : Fragment(), CityDetailsContract.View {
         })
     }
 
-    override fun showDailyForecast(forecast: LiveData<CityWithDailyForecast>) {
+    override fun showDailyForecast(forecast: LiveData<CityWeatherWithForecastDBO>) {
         forecast.observe(viewLifecycleOwner, Observer { value ->
             daily_forecast.text = value.forecastList?.joinToString("\n") {
                 "${SimpleDateFormat.getDateInstance().format(it.date)}      ${getString(R.string.temperature, it.temperature)}"
