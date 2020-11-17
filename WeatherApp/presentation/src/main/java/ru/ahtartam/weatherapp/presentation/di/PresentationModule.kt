@@ -14,8 +14,4 @@ interface PresentationModule {
     @Binds
     @Singleton
     fun bindCityDetailsPresenter(impl: CityDetailsPresenter): CityDetailsContract.Presenter
-
-    @Binds
-    @Singleton
-    fun bindAddCityPresenter(impl: AddCityPresenter): AddCityContract.Presenter
 }
