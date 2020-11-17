@@ -16,6 +16,9 @@ interface DailyForecastDao {
     @Query("DELETE FROM forecast WHERE cityId = :cityId")
     suspend fun deleteByCityId(cityId: Int)
 
+    @Query("DELETE FROM forecast WHERE cityId in (:cityId)")
+    suspend fun deleteByCityId(cityId: Set<Int>)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(list: List<CityForecastDBO>)
 }

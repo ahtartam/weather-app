@@ -1,16 +1,18 @@
 package ru.ahtartam.weatherapp.presentation.mvp
 
 import kotlinx.coroutines.*
-import ru.ahtartam.weatherapp.data.api.WeatherApiService
 import ru.ahtartam.weatherapp.data.db.Database
 import ru.ahtartam.weatherapp.data.db.DatabaseProvider
+import ru.ahtartam.weatherapp.data.db.model.mapper.CityWeatherDBOMapper
+import ru.ahtartam.weatherapp.domain.repository.ForecastRepository
 import ru.ahtartam.weatherapp.presentation.mvp.base.PresenterBase
 import timber.log.Timber
 import javax.inject.Inject
 
 class CityDetailsPresenter @Inject constructor(
     dbProvider: DatabaseProvider,
-    private val weatherApiService: WeatherApiService
+    private val forecastRepository: ForecastRepository,
+    private val dboMapper: CityWeatherDBOMapper
 ) : PresenterBase<CityDetailsContract.View>(), CityDetailsContract.Presenter {
     private val db: Database = dbProvider.get()
     private var cityId: Int? = null
@@ -43,9 +45,7 @@ class CityDetailsPresenter @Inject constructor(
         }) {
             cityId?.also { cityId ->
                 val weather = db.weatherDao().getWeatherByCityId(cityId)
-                val forecast = weatherApiService.dailyForecastByCityId(weather.lat, weather.lon).mapToListDailyForecast(cityId)
-                db.dailyForecastDao().deleteByCityId(cityId)
-                db.dailyForecastDao().upsert(forecast)
+                forecastRepository.fetchDailyForecastByCity(dboMapper(weather).city)
             }
         }
     }
