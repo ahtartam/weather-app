@@ -2,19 +2,15 @@ package ru.ahtartam.weatherapp.presentation.mvp
 
 import kotlinx.coroutines.*
 import retrofit2.HttpException
-import ru.ahtartam.weatherapp.data.api.WeatherApiService
-import ru.ahtartam.weatherapp.data.db.Database
-import ru.ahtartam.weatherapp.data.db.DatabaseProvider
+import ru.ahtartam.weatherapp.domain.repository.WeatherRepository
 import ru.ahtartam.weatherapp.presentation.R
 import ru.ahtartam.weatherapp.presentation.mvp.base.PresenterBase
 import timber.log.Timber
 import javax.inject.Inject
 
 class AddCityPresenter @Inject constructor(
-    dbProvider: DatabaseProvider,
-    private val weatherApiService: WeatherApiService
+    private val weatherRepository: WeatherRepository
 ) : PresenterBase<AddCityContract.View>(), AddCityContract.Presenter {
-    private val db: Database = dbProvider.get()
 
     override fun viewIsReady() {
     }
@@ -30,9 +26,8 @@ class AddCityPresenter @Inject constructor(
                 getView()?.showMessage(throwable.message ?: throwable::class.java.name)
             }
         }) {
-            val response = weatherApiService.weatherByCityName(text)
-            if (response.cityName == text) {
-                db.weatherDao().upsert(listOf(response.mapToWeather()))
+            val weather = weatherRepository.weatherByCityName(text)
+            if (weather != null) {
                 withContext(Dispatchers.Main) {
                     getView()?.back()
                 }

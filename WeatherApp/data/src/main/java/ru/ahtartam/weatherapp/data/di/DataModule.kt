@@ -9,6 +9,8 @@ import retrofit2.create
 import ru.ahtartam.weatherapp.data.api.WeatherApiService
 import ru.ahtartam.weatherapp.data.db.DatabaseProvider
 import ru.ahtartam.weatherapp.data.db.DatabaseProviderImpl
+import ru.ahtartam.weatherapp.data.repository.WeatherRepositoryImpl
+import ru.ahtartam.weatherapp.domain.repository.WeatherRepository
 import javax.inject.Singleton
 
 @Module(includes = [DataModule.ProvidesModule::class])
@@ -16,6 +18,9 @@ interface DataModule {
     @Binds
     @Singleton
     fun bindDatabaseProvider(impl: DatabaseProviderImpl): DatabaseProvider
+
+    @Binds
+    fun bindWeatherRepository(impl: WeatherRepositoryImpl): WeatherRepository
 
     @Module
     class ProvidesModule {
