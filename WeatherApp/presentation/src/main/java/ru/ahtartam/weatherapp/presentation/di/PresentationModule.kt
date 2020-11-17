@@ -9,9 +9,5 @@ import javax.inject.Singleton
 interface PresentationModule {
     @Binds
     @Singleton
-    fun bindCityListPresenter(impl: CityListPresenter): CityListContract.Presenter
-
-    @Binds
-    @Singleton
     fun bindCityDetailsPresenter(impl: CityDetailsPresenter): CityDetailsContract.Presenter
 }

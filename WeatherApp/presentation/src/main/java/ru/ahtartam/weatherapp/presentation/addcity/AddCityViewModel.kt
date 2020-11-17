@@ -39,7 +39,7 @@ class AddCityViewModel @Inject constructor(
                 _searchState.postValue(SearchState.Failed(throwable.message ?: throwable::class.java.name))
             }
         }) {
-            val weather = weatherRepository.weatherByCityName(text)
+            val weather = weatherRepository.fetchWeatherByCityName(text)
             if (weather != null) {
                 withContext(Dispatchers.Main) {
                     _searchState.postValue(SearchState.Success)

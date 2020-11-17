@@ -1,5 +1,7 @@
 package ru.ahtartam.weatherapp.data.repository
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import ru.ahtartam.weatherapp.data.api.WeatherApiService
 import ru.ahtartam.weatherapp.data.api.response.mapper.WeatherResponseMapper
 import ru.ahtartam.weatherapp.data.db.Database
@@ -17,7 +19,7 @@ class WeatherRepositoryImpl @Inject constructor(
 ) : WeatherRepository {
     private val db: Database = dbProvider.get()
 
-    override suspend fun weatherByCityName(cityName: String): CityWeather? {
+    override suspend fun fetchWeatherByCityName(cityName: String): CityWeather? {
         val response = weatherApiService.weatherByCityName(cityName)
         return if (response.cityName == cityName) {
             val dbo = responseMapper(response)
@@ -27,4 +29,21 @@ class WeatherRepositoryImpl @Inject constructor(
             null
         }
     }
+
+    override suspend fun deleteByCityId(cityId: Int) {
+        db.weatherDao().deleteByCityId(cityId)
+        db.dailyForecastDao().deleteByCityId(cityId)
+    }
+
+    override suspend fun refreshWeatherList() {
+        db.weatherDao().getCityWithWeatherList().map {
+            fetchWeatherByCityName(it.cityName)
+        }
+    }
+
+    override fun getWeatherList(): Flow<List<CityWeather>> =
+        db.weatherDao().subscribeToCityWithWeatherList()
+            .map { dboList ->
+                dboList.map { dboMapper(it) }
+            }
 }

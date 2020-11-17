@@ -1,5 +1,6 @@
 package ru.ahtartam.weatherapp.presentation.mvp
 
+import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.*
 import ru.ahtartam.weatherapp.data.db.Database
 import ru.ahtartam.weatherapp.data.db.DatabaseProvider
@@ -24,12 +25,12 @@ class CityDetailsPresenter @Inject constructor(
     override fun viewIsReady() {
         getView()?.getScope()?.launch(Dispatchers.IO) {
             cityId?.also { cityId ->
-                val info = db.weatherDao().subscribeToCityWithWeatherList(cityId)
+                val info = db.weatherDao().subscribeToCityWithWeatherList(cityId).asLiveData()
                 withContext(Dispatchers.Main) {
                     getView()?.showCityDetails(info)
                 }
 
-                val forecast = db.dailyForecastDao().subscribeToCityWithDailyForecast(cityId)
+                val forecast = db.dailyForecastDao().subscribeToCityWithDailyForecast(cityId).asLiveData()
                 withContext(Dispatchers.Main) {
                     getView()?.showDailyForecast(forecast)
                 }

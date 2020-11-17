@@ -1,18 +1,18 @@
 package ru.ahtartam.weatherapp.data.db.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 import ru.ahtartam.weatherapp.data.db.model.CityWeatherDBO
 
 @Dao
 interface WeatherDao {
     @Transaction
     @Query("SELECT * FROM weather")
-    fun subscribeToCityWithWeatherList(): LiveData<List<CityWeatherDBO>>
+    fun subscribeToCityWithWeatherList(): Flow<List<CityWeatherDBO>>
 
     @Transaction
     @Query("SELECT * FROM weather WHERE cityId = :cityId LIMIT 1")
-    fun subscribeToCityWithWeatherList(cityId: Int): LiveData<CityWeatherDBO>
+    fun subscribeToCityWithWeatherList(cityId: Int): Flow<CityWeatherDBO>
 
     @Transaction
     @Query("SELECT * FROM weather")
