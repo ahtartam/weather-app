@@ -12,7 +12,6 @@ import ru.ahtartam.weatherapp.di.App
 import ru.ahtartam.weatherapp.di.ApplicationComponent
 import ru.ahtartam.weatherapp.di.DaggerApplicationComponent
 import ru.ahtartam.weatherapp.presentation.citylist.CityListViewModel
-import ru.ahtartam.weatherapp.presentation.mvp.CityDetailsContract
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -21,8 +20,6 @@ class WeatherApp : Application(), App, Application.ActivityLifecycleCallbacks {
 
     @Inject
     lateinit var listViewModel: CityListViewModel
-    @Inject
-    lateinit var detailsPresenter: CityDetailsContract.Presenter
 
     private val appJob = SupervisorJob()
     private val appScope = CoroutineScope(appJob)
@@ -47,7 +44,6 @@ class WeatherApp : Application(), App, Application.ActivityLifecycleCallbacks {
             Timber.d("NetworkCallback.onAvailable($network)")
 
             listViewModel.refresh()
-            detailsPresenter.refresh(appScope)
         }
     }
 

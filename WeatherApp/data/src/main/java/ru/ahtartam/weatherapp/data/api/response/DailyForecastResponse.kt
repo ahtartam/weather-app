@@ -11,7 +11,7 @@ data class DailyForecastResponse(
     @JsonClass(generateAdapter = true)
     data class DailyGroup (
         @field:Json(name = "dt")
-        val date: Long,
+        val dateSeconds: Long,
         @field:Json(name = "temp")
         val temperature: TempGroup
     )

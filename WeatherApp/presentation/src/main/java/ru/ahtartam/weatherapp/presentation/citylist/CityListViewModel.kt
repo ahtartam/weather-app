@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.ahtartam.weatherapp.domain.model.City
 import ru.ahtartam.weatherapp.domain.model.CityWeather
 import ru.ahtartam.weatherapp.domain.repository.WeatherRepository
 import timber.log.Timber
@@ -23,11 +24,11 @@ class CityListViewModel @Inject constructor(
     val networkState: LiveData<NetworkState> get() = _networkState
 
     val weatherList: LiveData<List<CityWeather>> =
-        weatherRepository.getWeatherList().asLiveData()
+        weatherRepository.subscribeToWeatherList().asLiveData()
 
-    fun onCityDelete(cityId: Int) {
+    fun onCityDelete(city: City) {
         viewModelScope.launch {
-            weatherRepository.deleteByCityId(cityId)
+            weatherRepository.deleteByCityId(city.cityId)
         }
     }
 

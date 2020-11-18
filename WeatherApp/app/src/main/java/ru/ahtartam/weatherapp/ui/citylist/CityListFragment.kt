@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_city_list.*
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
+import ru.ahtartam.weatherapp.domain.model.City
 import ru.ahtartam.weatherapp.presentation.citylist.CityListViewModel
 import ru.ahtartam.weatherapp.presentation.citylist.CityListViewModel.NetworkState
 import ru.ahtartam.weatherapp.ui.citydetails.CityDetailsFragment
@@ -59,11 +60,11 @@ class CityListFragment : Fragment() {
         }
 
         adapter = CityListAdapter(
-            onCityClick = { cityId ->
-                showCityDetails(cityId)
+            onCityClick = { city ->
+                showCityDetails(city)
             },
-            onCityDelete = { cityId ->
-                viewModel.onCityDelete(cityId)
+            onCityDelete = { city ->
+                viewModel.onCityDelete(city)
             }
         )
         recycler.adapter = adapter
@@ -80,10 +81,10 @@ class CityListFragment : Fragment() {
         }
     }
 
-    private fun showCityDetails(cityId: Int) {
+    private fun showCityDetails(city: City) {
         findNavController().navigate(
             R.id.action_CityListFragment_to_CityDetailsFragment,
-            bundleOf(Pair(CityDetailsFragment.ARG_CITY_ID, cityId))
+            bundleOf(Pair(CityDetailsFragment.ARG_CITY, city))
         )
     }
 

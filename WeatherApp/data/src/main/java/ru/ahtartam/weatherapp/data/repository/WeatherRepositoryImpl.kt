@@ -7,6 +7,7 @@ import ru.ahtartam.weatherapp.data.api.response.mapper.WeatherResponseMapper
 import ru.ahtartam.weatherapp.data.db.Database
 import ru.ahtartam.weatherapp.data.db.DatabaseProvider
 import ru.ahtartam.weatherapp.data.db.model.mapper.CityWeatherDBOMapper
+import ru.ahtartam.weatherapp.domain.model.City
 import ru.ahtartam.weatherapp.domain.model.CityWeather
 import ru.ahtartam.weatherapp.domain.repository.WeatherRepository
 import javax.inject.Inject
@@ -30,20 +31,26 @@ class WeatherRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteByCityId(cityId: Int) {
-        db.weatherDao().deleteByCityId(cityId)
-        db.dailyForecastDao().deleteByCityId(cityId)
-    }
-
     override suspend fun refreshWeatherList() {
         db.weatherDao().getCityWithWeatherList().map {
             fetchWeatherByCityName(it.cityName)
         }
     }
 
-    override fun getWeatherList(): Flow<List<CityWeather>> =
+    override fun subscribeToWeatherByCity(city: City): Flow<CityWeather> =
+        db.weatherDao().subscribeToCityWithWeather(city.cityId)
+            .map { dboList ->
+                dboMapper(dboList)
+            }
+
+    override fun subscribeToWeatherList(): Flow<List<CityWeather>> =
         db.weatherDao().subscribeToCityWithWeatherList()
             .map { dboList ->
                 dboList.map { dboMapper(it) }
             }
+
+    override suspend fun deleteByCityId(cityId: Int) {
+        db.weatherDao().deleteByCityId(cityId)
+        db.dailyForecastDao().deleteByCityId(cityId)
+    }
 }

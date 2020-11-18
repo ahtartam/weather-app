@@ -13,7 +13,7 @@ class DailyForecastResponseMapper @Inject constructor()
         from.daily.map { d ->
             CityForecastDBO(
                 cityId = cityId,
-                date = Date(d.date),
+                date = Date(d.dateSeconds * 1000),
                 temperature = d.temperature.day
             )
         }

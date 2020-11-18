@@ -12,15 +12,11 @@ interface WeatherDao {
 
     @Transaction
     @Query("SELECT * FROM weather WHERE cityId = :cityId LIMIT 1")
-    fun subscribeToCityWithWeatherList(cityId: Int): Flow<CityWeatherDBO>
+    fun subscribeToCityWithWeather(cityId: Int): Flow<CityWeatherDBO>
 
     @Transaction
     @Query("SELECT * FROM weather")
     suspend fun getCityWithWeatherList(): List<CityWeatherDBO>
-
-    @Transaction
-    @Query("SELECT * FROM weather WHERE cityId = :cityId LIMIT 1")
-    suspend fun getWeatherByCityId(cityId: Int): CityWeatherDBO
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(list: List<CityWeatherDBO>)
