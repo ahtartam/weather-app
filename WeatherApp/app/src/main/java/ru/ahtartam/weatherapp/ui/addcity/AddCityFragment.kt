@@ -11,7 +11,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -21,7 +20,6 @@ import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
 import ru.ahtartam.weatherapp.presentation.addcity.AddCityViewModel
 import ru.ahtartam.weatherapp.presentation.addcity.AddCityViewModel.SearchState
-import ru.ahtartam.weatherapp.ui.citylist.CityListFragment
 import javax.inject.Inject
 
 class AddCityFragment : Fragment() {
@@ -84,9 +82,6 @@ class AddCityFragment : Fragment() {
     }
 
     private fun back() {
-        findNavController().navigate(
-            R.id.action_AddCityFragment_to_CityListFragment,
-            bundleOf(Pair(CityListFragment.ARG_IS_NEED_REFRESH, true))
-        )
+        findNavController().navigate(R.id.action_AddCityFragment_to_CityListFragment)
     }
 }

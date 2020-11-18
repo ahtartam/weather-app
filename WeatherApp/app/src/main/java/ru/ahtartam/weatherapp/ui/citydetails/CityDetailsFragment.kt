@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.fragment_city_details.*
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
 import ru.ahtartam.weatherapp.domain.model.City
+import ru.ahtartam.weatherapp.network.NetworkLiveData
 import ru.ahtartam.weatherapp.presentation.citydetails.CityDetailsViewModel
 import ru.ahtartam.weatherapp.presentation.citydetails.CityDetailsViewModel.NetworkState
 import java.text.SimpleDateFormat
@@ -38,6 +39,10 @@ class CityDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        NetworkLiveData(requireContext()).observe(viewLifecycleOwner) { available ->
+            if (available) viewModel.refresh(city)
+        }
 
         viewModel.networkState.observe(viewLifecycleOwner) { state ->
             progress.isVisible = state == NetworkState.Processing

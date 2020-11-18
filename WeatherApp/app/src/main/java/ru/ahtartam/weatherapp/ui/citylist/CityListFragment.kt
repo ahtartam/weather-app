@@ -12,9 +12,11 @@ import kotlinx.android.synthetic.main.fragment_city_list.*
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
 import ru.ahtartam.weatherapp.domain.model.City
+import ru.ahtartam.weatherapp.network.NetworkLiveData
 import ru.ahtartam.weatherapp.presentation.citylist.CityListViewModel
 import ru.ahtartam.weatherapp.presentation.citylist.CityListViewModel.NetworkState
 import ru.ahtartam.weatherapp.ui.citydetails.CityDetailsFragment
+import timber.log.Timber
 import javax.inject.Inject
 
 class CityListFragment : Fragment() {
@@ -38,8 +40,13 @@ class CityListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        NetworkLiveData(requireContext()).observe(viewLifecycleOwner) { available ->
+            if (available) viewModel.refresh()
+        }
+
         viewModel.networkState.observe(viewLifecycleOwner) { state ->
             (state == NetworkState.Processing).also { isProcessing ->
+                Timber.d("Refreshing $isProcessing")
                 swipe_refresh.isRefreshing = isProcessing
             }
             when(state) {
@@ -73,14 +80,6 @@ class CityListFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        if (arguments?.getBoolean(ARG_IS_NEED_REFRESH, false) == true) {
-            viewModel.refresh()
-        }
-    }
-
     private fun showCityDetails(city: City) {
         findNavController().navigate(
             R.id.action_CityListFragment_to_CityDetailsFragment,
@@ -92,9 +91,5 @@ class CityListFragment : Fragment() {
         view?.post {
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
-    }
-
-    companion object {
-        const val ARG_IS_NEED_REFRESH = "needRefresh"
     }
 }
