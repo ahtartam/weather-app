@@ -6,78 +6,83 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_city_details.*
-import kotlinx.coroutines.CoroutineScope
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
-import ru.ahtartam.weatherapp.model.CityWithDailyForecast
-import ru.ahtartam.weatherapp.model.Weather
-import ru.ahtartam.weatherapp.mvp.CityDetailsContract
+import ru.ahtartam.weatherapp.domain.model.City
+import ru.ahtartam.weatherapp.network.NetworkLiveData
+import ru.ahtartam.weatherapp.presentation.citydetails.CityDetailsViewModel
+import ru.ahtartam.weatherapp.presentation.citydetails.CityDetailsViewModel.NetworkState
 import java.text.SimpleDateFormat
 import javax.inject.Inject
 
-class CityDetailsFragment : Fragment(), CityDetailsContract.View {
-
+class CityDetailsFragment : Fragment() {
     @Inject
-    lateinit var presenter: CityDetailsContract.Presenter
+    lateinit var viewModel: CityDetailsViewModel
+
+    private lateinit var city: City
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        city = requireArguments().getParcelable(ARG_CITY)!!
         (requireContext().applicationContext as WeatherApp).appComponent.inject(this)
-
-        presenter.attachView(this)
     }
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        presenter.setCityId(requireArguments().getInt(ARG_CITY_ID))
+        return inflater.inflate(R.layout.fragment_city_details, container, false)
+    }
 
-        return inflater.inflate(R.layout.fragment_city_details, container, false).also {
-            presenter.viewIsReady()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        NetworkLiveData(requireContext()).observe(viewLifecycleOwner) { available ->
+            if (available) viewModel.refresh(city)
+        }
+
+        viewModel.networkState.observe(viewLifecycleOwner) { state ->
+            progress.isVisible = state == NetworkState.Processing
+            when(state) {
+                NetworkState.Success -> { }
+                NetworkState.Processing -> { }
+                is NetworkState.Failed -> showMessage(state.message)
+            }
+        }
+
+        viewModel.getWeather(city).observe(viewLifecycleOwner) { weather ->
+            city_name.text = weather.city.cityName
+            current_temperature.text = weather.weather.temperature
+                ?.let { getString(R.string.current_temperature, it) } ?: "N/A"
+        }
+
+        viewModel.getForecast(city).observe(viewLifecycleOwner) { forecast ->
+            daily_forecast.text = forecast.forecastList.joinToString("\n") {
+                "${SimpleDateFormat.getDateInstance().format(it.date)}      ${getString(R.string.temperature, it.weather.temperature)}"
+            }
         }
     }
 
-    override fun showCityDetails(info: LiveData<Weather>) {
-        info.observe(viewLifecycleOwner, Observer { value ->
-            city_name.text = value.cityName
-            current_temperature.text = value.temperature
-                ?.let { getString(R.string.current_temperature, it) } ?: "N/A"
-        })
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.refresh(city)
     }
 
-    override fun showDailyForecast(forecast: LiveData<CityWithDailyForecast>) {
-        forecast.observe(viewLifecycleOwner, Observer { value ->
-            daily_forecast.text = value.forecastList?.joinToString("\n") {
-                "${SimpleDateFormat.getDateInstance().format(it.date)}      ${getString(R.string.temperature, it.temperature)}"
-            }
-        })
-    }
-
-    override fun getScope(): CoroutineScope = lifecycleScope
-    override fun showMessage(@StringRes messageResId: Int) = showMessage(getString(messageResId))
-
-    override fun showMessage(message: String) {
+    private fun showMessage(message: String) {
         view?.post {
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
     }
 
-    override fun back() {
+    private fun back() {
         findNavController().navigate(R.id.action_CityDetailsFragment_to_CityListFragment)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.detachView()
-    }
-
     companion object {
-        const val ARG_CITY_ID = "cityId"
+        const val ARG_CITY = "city"
     }
 }

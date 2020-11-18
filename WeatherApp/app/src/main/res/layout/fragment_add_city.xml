@@ -13,11 +13,18 @@
         android:hint="@string/type_city_for_search"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/search_button"
+        app:layout_constraintEnd_toStartOf="@id/barrier"
         android:inputType="textCapWords"
         android:imeOptions="actionSearch"
         android:lines="1"
         android:importantForAutofill="no" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        app:barrierDirection="left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="search_button,progress"/>
 
     <ImageButton
         android:id="@+id/search_button"
@@ -28,5 +35,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/search_city"
         android:contentDescription="@string/search" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/search_city"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

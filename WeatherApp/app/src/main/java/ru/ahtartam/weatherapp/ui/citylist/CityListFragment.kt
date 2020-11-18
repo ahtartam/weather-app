@@ -6,114 +6,90 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.android.synthetic.main.fragment_city_list.*
 import ru.ahtartam.weatherapp.R
 import ru.ahtartam.weatherapp.WeatherApp
-import ru.ahtartam.weatherapp.model.Weather
-import ru.ahtartam.weatherapp.mvp.CityListContract
+import ru.ahtartam.weatherapp.domain.model.City
+import ru.ahtartam.weatherapp.network.NetworkLiveData
+import ru.ahtartam.weatherapp.presentation.citylist.CityListViewModel
+import ru.ahtartam.weatherapp.presentation.citylist.CityListViewModel.NetworkState
 import ru.ahtartam.weatherapp.ui.citydetails.CityDetailsFragment
+import timber.log.Timber
 import javax.inject.Inject
 
-class CityListFragment : Fragment(), CityListContract.View {
-
+class CityListFragment : Fragment() {
     @Inject
-    lateinit var presenter: CityListContract.Presenter
+    lateinit var viewModel: CityListViewModel
 
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var adapter: CityListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireContext().applicationContext as WeatherApp).appComponent.inject(this)
-
-        presenter.attachView(this)
     }
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_city_list, container, false).also {
-            presenter.viewIsReady()
-        }
+        return inflater.inflate(R.layout.fragment_city_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
+        NetworkLiveData(requireContext()).observe(viewLifecycleOwner) { available ->
+            if (available) viewModel.refresh()
+        }
+
+        viewModel.networkState.observe(viewLifecycleOwner) { state ->
+            (state == NetworkState.Processing).also { isProcessing ->
+                Timber.d("Refreshing $isProcessing")
+                swipe_refresh.isRefreshing = isProcessing
+            }
+            when(state) {
+                NetworkState.Success -> { }
+                NetworkState.Processing -> { }
+                is NetworkState.Failed -> showMessage(state.message)
+            }
+        }
+
+        viewModel.weatherList.observe(viewLifecycleOwner) { weatherList ->
+            adapter.takeData(weatherList)
+        }
+
+        fab.setOnClickListener {
             findNavController().navigate(
                 R.id.action_CityListFragment_to_AddCityFragment
             )
         }
 
         adapter = CityListAdapter(
-            onCityClick = { cityId ->
-                presenter.onCityClicked(cityId)
+            onCityClick = { city ->
+                showCityDetails(city)
             },
-            onCityDelete = { cityId ->
-                presenter.onCityDelete(cityId)
+            onCityDelete = { city ->
+                viewModel.onCityDelete(city)
             }
         )
-        view.findViewById<RecyclerView>(R.id.recycler).adapter = adapter
-        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh)
-        swipeRefreshLayout.setOnRefreshListener {
-            presenter.refresh()
+        recycler.adapter = adapter
+        swipe_refresh.setOnRefreshListener {
+            viewModel.refresh()
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        if (arguments?.getBoolean(ARG_IS_NEED_REFRESH, false) == true) {
-            presenter.refresh()
-        }
-    }
-
-    override fun showCityList(list: LiveData<List<Weather>>) {
-        list.observe(viewLifecycleOwner, Observer {
-            swipeRefreshLayout.isRefreshing = false
-            adapter.takeData(it)
-        })
-    }
-
-    override fun onEmptyResult() {
-        swipeRefreshLayout.isRefreshing = false
-    }
-
-    override fun showCityDetails(cityId: Int) {
+    private fun showCityDetails(city: City) {
         findNavController().navigate(
             R.id.action_CityListFragment_to_CityDetailsFragment,
-            bundleOf(Pair(CityDetailsFragment.ARG_CITY_ID, cityId))
+            bundleOf(Pair(CityDetailsFragment.ARG_CITY, city))
         )
     }
 
-    override fun getScope(): CoroutineScope = lifecycleScope
-    override fun showMessage(@StringRes messageResId: Int) = showMessage(getString(messageResId))
-
-    override fun showMessage(message: String) {
+    private fun showMessage(message: String) {
         view?.post {
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
         }
-    }
-
-    override fun back() {}
-
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.detachView()
-    }
-
-    companion object {
-        const val ARG_IS_NEED_REFRESH = "needRefresh"
     }
 }
