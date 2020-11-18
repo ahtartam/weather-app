@@ -5,14 +5,12 @@ import kotlinx.coroutines.*
 import ru.ahtartam.weatherapp.domain.model.City
 import ru.ahtartam.weatherapp.domain.model.CityDailyForecast
 import ru.ahtartam.weatherapp.domain.model.CityWeather
-import ru.ahtartam.weatherapp.domain.repository.ForecastRepository
-import ru.ahtartam.weatherapp.domain.repository.WeatherRepository
+import ru.ahtartam.weatherapp.domain.usecases.WeatherForecastUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
 class CityDetailsViewModel @Inject constructor(
-    private val weatherRepository: WeatherRepository,
-    private val forecastRepository: ForecastRepository
+    private val weatherForecastUseCase: WeatherForecastUseCase
 ) : ViewModel() {
     sealed class NetworkState {
         object Processing : NetworkState()
@@ -24,10 +22,10 @@ class CityDetailsViewModel @Inject constructor(
     val networkState: LiveData<NetworkState> get() = _networkState
 
     fun getWeather(city: City): LiveData<CityWeather> =
-        weatherRepository.subscribeToWeatherByCity(city).asLiveData()
+        weatherForecastUseCase.subscribeToWeatherByCity(city).asLiveData()
 
     fun getForecast(city: City): LiveData<CityDailyForecast> =
-        forecastRepository.subscribeToDailyForecastByCity(city).asLiveData()
+        weatherForecastUseCase.subscribeToDailyForecastByCity(city).asLiveData()
 
     fun refresh(city: City) {
         _networkState.postValue(NetworkState.Processing)
@@ -35,7 +33,7 @@ class CityDetailsViewModel @Inject constructor(
             Timber.e(throwable)
             _networkState.postValue(NetworkState.Failed(throwable.message ?: throwable::class.java.name))
         }) {
-            forecastRepository.fetchDailyForecastByCity(city)
+            weatherForecastUseCase.fetchDailyForecastByCity(city)
             _networkState.postValue(NetworkState.Success)
         }
     }

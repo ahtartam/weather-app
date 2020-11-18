@@ -6,12 +6,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.ahtartam.weatherapp.domain.model.City
 import ru.ahtartam.weatherapp.domain.model.CityWeather
-import ru.ahtartam.weatherapp.domain.repository.WeatherRepository
+import ru.ahtartam.weatherapp.domain.usecases.CurrentWeatherUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
 class CityListViewModel @Inject constructor(
-    private val weatherRepository: WeatherRepository
+    private val currentWeatherUseCase: CurrentWeatherUseCase
 ) : ViewModel() {
 
     sealed class NetworkState {
@@ -24,11 +24,11 @@ class CityListViewModel @Inject constructor(
     val networkState: LiveData<NetworkState> get() = _networkState
 
     val weatherList: LiveData<List<CityWeather>> =
-        weatherRepository.subscribeToWeatherList().asLiveData()
+        currentWeatherUseCase.subscribeToWeatherList().asLiveData()
 
     fun onCityDelete(city: City) {
         viewModelScope.launch {
-            weatherRepository.deleteByCityId(city.cityId)
+            currentWeatherUseCase.deleteCity(city)
         }
     }
 
@@ -38,7 +38,7 @@ class CityListViewModel @Inject constructor(
             Timber.e(throwable)
             _networkState.postValue(NetworkState.Failed(throwable.message ?: throwable::class.java.name))
         }) {
-            weatherRepository.refreshWeatherList()
+            currentWeatherUseCase.refreshWeatherList()
             _networkState.postValue(NetworkState.Success)
         }
     }

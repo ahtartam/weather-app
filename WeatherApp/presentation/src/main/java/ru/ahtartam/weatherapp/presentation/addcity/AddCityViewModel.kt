@@ -9,12 +9,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import ru.ahtartam.weatherapp.domain.repository.WeatherRepository
+import ru.ahtartam.weatherapp.domain.usecases.AddCityUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
 class AddCityViewModel @Inject constructor(
-    private val weatherRepository: WeatherRepository
+    private val addCityUseCase: AddCityUseCase
 ) : ViewModel() {
 
     sealed class SearchState {
@@ -39,7 +39,7 @@ class AddCityViewModel @Inject constructor(
                 _searchState.postValue(SearchState.Failed(throwable.message ?: throwable::class.java.name))
             }
         }) {
-            val weather = weatherRepository.fetchWeatherByCityName(text)
+            val weather = addCityUseCase.searchByCityName(text)
             if (weather != null) {
                 withContext(Dispatchers.Main) {
                     _searchState.postValue(SearchState.Success)
