@@ -10,6 +10,7 @@ import ru.ahtartam.weatherapp.data.db.model.mapper.CityWeatherDBOMapper
 import ru.ahtartam.weatherapp.domain.model.City
 import ru.ahtartam.weatherapp.domain.model.CityWeather
 import ru.ahtartam.weatherapp.domain.repository.WeatherRepository
+import java.util.*
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
@@ -22,7 +23,7 @@ class WeatherRepositoryImpl @Inject constructor(
 
     override suspend fun fetchWeatherByCityName(cityName: String): CityWeather? {
         val response = weatherApiService.weatherByCityName(cityName)
-        return if (response.cityName == cityName) {
+        return if (response.cityName.toLowerCase(Locale.getDefault()) == cityName.toLowerCase(Locale.getDefault())) {
             val dbo = responseMapper(response)
             db.weatherDao().upsert(listOf(dbo))
             dboMapper(dbo)
